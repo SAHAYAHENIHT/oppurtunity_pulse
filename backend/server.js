@@ -789,13 +789,9 @@ app.post('/api/chat', async (req, res) => {
       } else {
         reply = "I'm your Pulse Career Coach. You can ask me to 'recommend jobs', check for 'skill gaps', or 'restart' our career discovery session!";
       }
-  }
-
-  res.json({ success: true, reply });
-});
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
-app.listen(PORT, async () => {
+const server = app.listen(PORT, '0.0.0.0', async () => {
   console.log(`\n🚀 Opportunity Pulse backend running on http://localhost:${PORT}`);
   console.log('─'.repeat(55));
 
