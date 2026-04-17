@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { API_BASE_URL } from './api.js'
 import {
   Flame, Compass, Briefcase, Bell, LayoutDashboard,
   CalendarClock, MessageCircle, FileText, CheckCircle,
@@ -86,14 +87,14 @@ function App() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      await fetch('http://localhost:5000/api/scrape', { method: 'POST' })
+      await fetch(`${API_BASE_URL}/api/scrape`, { method: 'POST' })
       const userProfile = {
         department: profile.department,
         courseEnrolled: profile.courseEnrolled,
         skills: profile.skills.split(',').map(s => s.trim()).filter(s => s),
         preferences: profile.preferences
       }
-      const res = await fetch('http://localhost:5000/api/feed', {
+      const res = await fetch(`${API_BASE_URL}/api/feed`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profile: userProfile })
@@ -101,7 +102,7 @@ function App() {
       const data = await res.json()
       if (data.feed) setOpportunities(data.feed)
       
-      const srcRes = await fetch('http://localhost:5000/api/sources')
+      const srcRes = await fetch(`${API_BASE_URL}/api/sources`)
       const srcData = await srcRes.json()
       setSourcesData(srcData)
     } catch (err) { console.error(err) }
@@ -151,7 +152,7 @@ function App() {
     setIsChatLoading(true)
 
     try {
-      const res = await fetch('http://localhost:5000/api/chat', {
+      const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -174,7 +175,7 @@ function App() {
     e.preventDefault()
     setAuthFeedback({ type: '', msg: '' })
     try {
-      const res = await fetch('http://localhost:5000/api/login', {
+      const res = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: loginForm.email, password: loginForm.password })
@@ -206,7 +207,7 @@ function App() {
     e.preventDefault()
     setAuthFeedback({ type: '', msg: '' })
     try {
-      const res = await fetch('http://localhost:5000/api/register', {
+      const res = await fetch(`${API_BASE_URL}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginForm)
@@ -244,7 +245,7 @@ function App() {
     
     // Trigger Backend Application Logic (Email + Chat)
     try {
-      await fetch('http://localhost:5000/api/apply', {
+      await fetch(`${API_BASE_URL}/api/apply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -266,7 +267,7 @@ function App() {
   const handleSaveProfile = async () => {
     setIsSavingProfile(true)
     try {
-      const res = await fetch('http://localhost:5000/api/profile/update', {
+      const res = await fetch(`${API_BASE_URL}/api/profile/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: profile.email, profile })
@@ -309,7 +310,7 @@ function App() {
       if (type === 'resume') {
         setIsExtractingSkills(true)
         try {
-          const parseRes = await fetch('http://localhost:5000/api/resume/parse', {
+          const parseRes = await fetch(`${API_BASE_URL}/api/resume/parse`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ fileBase64: result, email: profile.email })
@@ -346,7 +347,7 @@ function App() {
                 skills: mergedSkillsArr,
                 preferences: profile.preferences
               }
-              const res = await fetch('http://localhost:5000/api/feed', {
+              const res = await fetch(`${API_BASE_URL}/api/feed`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ profile: userProfile })
@@ -374,7 +375,7 @@ function App() {
     setIsCheckingAts(true)
     const jd = typeof jobOrText === 'string' ? jobOrText : (jobOrText.desc + " " + jobOrText.title);
     try {
-      const res = await fetch('http://localhost:5000/api/ats/check', {
+      const res = await fetch(`${API_BASE_URL}/api/ats/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -1258,7 +1259,7 @@ function App() {
                   if (text.length > 50) {
                     setIsExtractingSkills(true);
                   try {
-                    const res = await fetch('http://localhost:5000/api/resume/extract-skills', {
+                    const res = await fetch(`${API_BASE_URL}/api/resume/extract-skills`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ resumeText: text })
